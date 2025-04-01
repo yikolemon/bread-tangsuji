@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.biz.mapper.BizOrderItemMapper">
+    
+    <resultMap type="BizOrderItem" id="BizOrderItemResult">
+        <result property="itemId"    column="item_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productName"    column="product_name"    />
+        <result property="num"    column="num"    />
+        <result property="singlePrice"    column="single_price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBizOrderItemVo">
+        select item_id, order_id, product_id, product_name, num, single_price, create_by, create_time, update_by, update_time from biz_order_item
+    </sql>
+
+    <select id="selectBizOrderItemList" parameterType="BizOrderItem" resultMap="BizOrderItemResult">
+        <include refid="selectBizOrderItemVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="productName != null  and productName != ''"> and product_name like concat('%', #{productName}, '%')</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="singlePrice != null "> and single_price = #{singlePrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectBizOrderItemByItemId" parameterType="Long" resultMap="BizOrderItemResult">
+        <include refid="selectBizOrderItemVo"/>
+        where item_id = #{itemId}
+    </select>
+
+    <insert id="insertBizOrderItem" parameterType="BizOrderItem">
+        insert into biz_order_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="itemId != null">item_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="productName != null">product_name,</if>
+            <if test="num != null">num,</if>
+            <if test="singlePrice != null">single_price,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="itemId != null">#{itemId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="num != null">#{num},</if>
+            <if test="singlePrice != null">#{singlePrice},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizOrderItem" parameterType="BizOrderItem">
+        update biz_order_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="singlePrice != null">single_price = #{singlePrice},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where item_id = #{itemId}
+    </update>
+
+    <delete id="deleteBizOrderItemByItemId" parameterType="Long">
+        delete from biz_order_item where item_id = #{itemId}
+    </delete>
+
+    <delete id="deleteBizOrderItemByItemIds" parameterType="String">
+        delete from biz_order_item where item_id in 
+        <foreach item="itemId" collection="array" open="(" separator="," close=")">
+            #{itemId}
+        </foreach>
+    </delete>
+
+</mapper>
