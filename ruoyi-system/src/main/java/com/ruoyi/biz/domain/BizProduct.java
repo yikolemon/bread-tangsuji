@@ -39,6 +39,10 @@ public class BizProduct extends BaseEntity
     @Excel(name = "分类id")
     private Long categoryId;
 
+    /** 分类名称 */
+    @Excel(name = "分类名称")
+    private String categoryName;
+
     /** 库存数量 */
     @Excel(name = "库存数量")
     private Long stock;
@@ -107,6 +111,16 @@ public class BizProduct extends BaseEntity
         return categoryId;
     }
 
+    public void setCategoryName(String categoryName) 
+    {
+        this.categoryName = categoryName;
+    }
+
+    public String getCategoryName() 
+    {
+        return categoryName;
+    }
+
     public void setStock(Long stock) 
     {
         this.stock = stock;
@@ -136,6 +150,7 @@ public class BizProduct extends BaseEntity
             .append("price", getPrice())
             .append("image", getImage())
             .append("categoryId", getCategoryId())
+            .append("categoryName", getCategoryName())
             .append("stock", getStock())
             .append("status", getStatus())
             .append("createBy", getCreateBy())

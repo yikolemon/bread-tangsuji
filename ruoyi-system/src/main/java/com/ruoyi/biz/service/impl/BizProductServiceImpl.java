@@ -5,7 +5,9 @@ import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.biz.mapper.BizProductMapper;
+import com.ruoyi.biz.mapper.BizCategoryMapper;
 import com.ruoyi.biz.domain.BizProduct;
+import com.ruoyi.biz.domain.BizCategory;
 import com.ruoyi.biz.service.IBizProductService;
 import com.ruoyi.common.core.text.Convert;
 
@@ -20,6 +22,9 @@ public class BizProductServiceImpl implements IBizProductService
 {
     @Autowired
     private BizProductMapper bizProductMapper;
+    
+    @Autowired
+    private BizCategoryMapper bizCategoryMapper;
 
     /**
      * 查询商品
@@ -30,7 +35,14 @@ public class BizProductServiceImpl implements IBizProductService
     @Override
     public BizProduct selectBizProductByProductId(Long productId)
     {
-        return bizProductMapper.selectBizProductByProductId(productId);
+        BizProduct product = bizProductMapper.selectBizProductByProductId(productId);
+        if (product != null && product.getCategoryId() != null) {
+            BizCategory category = bizCategoryMapper.selectBizCategoryByCategoryId(product.getCategoryId());
+            if (category != null) {
+                product.setCategoryName(category.getName());
+            }
+        }
+        return product;
     }
 
     /**
@@ -42,7 +54,16 @@ public class BizProductServiceImpl implements IBizProductService
     @Override
     public List<BizProduct> selectBizProductList(BizProduct bizProduct)
     {
-        return bizProductMapper.selectBizProductList(bizProduct);
+        List<BizProduct> products = bizProductMapper.selectBizProductList(bizProduct);
+        for (BizProduct product : products) {
+            if (product.getCategoryId() != null) {
+                BizCategory category = bizCategoryMapper.selectBizCategoryByCategoryId(product.getCategoryId());
+                if (category != null) {
+                    product.setCategoryName(category.getName());
+                }
+            }
+        }
+        return products;
     }
 
     /**

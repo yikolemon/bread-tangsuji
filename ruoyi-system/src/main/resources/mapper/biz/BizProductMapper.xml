@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectBizProductList" parameterType="BizProduct" resultMap="BizProductResult">
         <include refid="selectBizProductVo"/>
-        <where>  
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="price != null "> and price = #{price}</if>
@@ -34,17 +34,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stock != null "> and stock = #{stock}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
+        order by create_time desc, update_time desc
     </select>
+
     
     <select id="selectBizProductByProductId" parameterType="Long" resultMap="BizProductResult">
         <include refid="selectBizProductVo"/>
         where product_id = #{productId}
     </select>
 
-    <insert id="insertBizProduct" parameterType="BizProduct">
+    <insert id="insertBizProduct" parameterType="BizProduct" useGeneratedKeys="true" keyProperty="productId">
         insert into biz_product
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="productId != null">product_id,</if>
             <if test="name != null">name,</if>
             <if test="description != null">description,</if>
             <if test="price != null">price,</if>
@@ -58,7 +59,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="productId != null">#{productId},</if>
             <if test="name != null">#{name},</if>
             <if test="description != null">#{description},</if>
             <if test="price != null">#{price},</if>
